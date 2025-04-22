@@ -39,6 +39,7 @@ public class PlayerMove : MonoBehaviour
         // 캐릭터가 땅 위에 있다면..
         if (_characterController.isGrounded)
         // = if (_characterController.collisionFlags == CollisionFlags.Below)
+        //
         {
             _isJumping = false;
         }
