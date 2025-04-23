@@ -1,6 +1,11 @@
 using System;
 using UnityEngine;
 
+
+// 인공지능: 사랑처럼 똑똑하게 행동하는 알고리즘
+// - 반응형/계획형 -> 규칙 기반 인공지능 (전통적인 방식)
+//               ->   ㄴ 제어문(조건문, 반복문)
+
 public class Enemy : MonoBehaviour
 {
     // 1. 상태를 열거형으로 정의한다.
@@ -25,7 +30,8 @@ public class Enemy : MonoBehaviour
     public float ReturnDistance   = 5f;     // 적 복귀 범위
     public float AttackDistance   = 2.5f;   // 플레이어 공격 범위
     public float MoveSpeed        = 3.3f;   // 이동 속도
-    
+    public float AttackCooltime   = 2f;     // 공격 쿨타임
+    private float _attackTimer    = 0f;     // ㄴ 체크기
     
     private void Start()
     {
@@ -141,7 +147,21 @@ public class Enemy : MonoBehaviour
 
     private void Attack()
     {
+        // 전이: 공격 범위 보다 멀어지면 -> Trace
+        if(Vector3.Distance(transform.position, _player.transform.position) >= AttackDistance)
+        {
+            Debug.Log("상태전환: Attack -> Trace");
+            CurrentState = EnemyState.Trace;
+            return;
+        }
+        
         // 행동: 플레이어를 공격한다.
+        _attackTimer += Time.deltaTime;
+        if (_attackTimer >= AttackCooltime)
+        {
+            Debug.Log("플레이어 공격!");
+            _attackTimer = 0f;
+        }
     }
 
     private void Damaged()
