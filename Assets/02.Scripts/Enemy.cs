@@ -19,14 +19,17 @@ public class Enemy : MonoBehaviour
 
     private GameObject _player;                       // 플레이어
     private CharacterController _characterController; // 캐릭터 컨트롤러
-
-    public float FindDistance   = 5f;     // 플레이어 발견 범위
-    public float AttackDistance = 2.5f;   // 플레이어 공격 범위
-    public float MoveSpeed      = 3.3f;   // 이동 속도
+    private Vector3 _startPosition;                   // 시작 위치
+    
+    public float FindDistance     = 5f;     // 플레이어 발견 범위
+    public float ReturnDistance   = 5f;     // 적 복귀 범위
+    public float AttackDistance   = 2.5f;   // 플레이어 공격 범위
+    public float MoveSpeed        = 3.3f;   // 이동 속도
     
     
     private void Start()
     {
+        _startPosition = transform.position;
         _characterController = GetComponent<CharacterController>();
         _player = GameObject.FindGameObjectWithTag("Player");
     }
@@ -92,7 +95,7 @@ public class Enemy : MonoBehaviour
     private void Trace()
     {
         // 전이: 플레이어와 멀어지면 -> Return
-        if(Vector3.Distance(transform.position, _player.transform.position) >= FindDistance)
+        if(Vector3.Distance(transform.position, _player.transform.position) > ReturnDistance)
         {
             Debug.Log("상태전환: Trace -> Return");
             CurrentState = EnemyState.Return;
@@ -114,7 +117,26 @@ public class Enemy : MonoBehaviour
 
     private void Return()
     {
-        // 행동: 처음 자리로 되돌아간다.
+        // 전이: 시작 위치와 가까워 지면 -> Idle
+        if(Vector3.Distance(transform.position, _startPosition) <= _characterController.minMoveDistance)
+        {
+            Debug.Log("상태전환: Return -> Idle");
+            transform.position = _startPosition;
+            CurrentState = EnemyState.Idle;
+            return;
+        }
+        
+        // 전이: 플레이어와 가까워 지면 -> Trace
+        if(Vector3.Distance(transform.position, _player.transform.position) < FindDistance)
+        {
+            Debug.Log("상태전환: Return -> Trace");
+            CurrentState = EnemyState.Trace;
+        }
+    
+        
+        // 행동: 시작 위치로 되돌아간다.
+        Vector3 dir = (_startPosition - transform.position).normalized;
+        _characterController.Move(dir * MoveSpeed * Time.deltaTime);
     }
 
     private void Attack()

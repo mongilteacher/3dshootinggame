@@ -821,7 +821,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CurrentState: 0
-  FindDistance: 5
+  FindDistance: 7
+  ReturnDistance: 10
+  AttackDistance: 2
   MoveSpeed: 3.3
 --- !u!1 &1250190677
 GameObject:
