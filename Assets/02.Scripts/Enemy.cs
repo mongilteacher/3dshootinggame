@@ -17,11 +17,17 @@ public class Enemy : MonoBehaviour
     // 2. 현재 상태를 지정한다.
     public EnemyState CurrentState = EnemyState.Idle;
 
-    private GameObject _player;           // 플레이어
-    public float FindDistance = 7f;       // 플레이어 발견 범위
+    private GameObject _player;                       // 플레이어
+    private CharacterController _characterController; // 캐릭터 컨트롤러
 
+    public float FindDistance   = 5f;     // 플레이어 발견 범위
+    public float AttackDistance = 2.5f;   // 플레이어 공격 범위
+    public float MoveSpeed      = 3.3f;   // 이동 속도
+    
+    
     private void Start()
     {
+        _characterController = GetComponent<CharacterController>();
         _player = GameObject.FindGameObjectWithTag("Player");
     }
     
@@ -75,6 +81,7 @@ public class Enemy : MonoBehaviour
     {
         // 행동: 가만히 있는다. 
         
+        // 전이: 플레이어와 가까워 지면 -> Trace
         if(Vector3.Distance(transform.position, _player.transform.position) < FindDistance)
         {
             Debug.Log("상태전환: Idle -> Trace");
@@ -85,6 +92,23 @@ public class Enemy : MonoBehaviour
     private void Trace()
     {
         // 행동: 플레이어를 추적한다.
+        Vector3 dir = (_player.transform.position - transform.position).normalized;
+        _characterController.Move(dir * MoveSpeed * Time.deltaTime);
+        
+        
+        // 전이: 플레이어와 멀어지면 -> Return
+        if(Vector3.Distance(transform.position, _player.transform.position) >= FindDistance)
+        {
+            Debug.Log("상태전환: Trace -> Return");
+            CurrentState = EnemyState.Return;
+        }
+        
+        // 전이: 공격 범위 만큼 가까워 지면 -> Attack
+        if(Vector3.Distance(transform.position, _player.transform.position) < AttackDistance)
+        {
+            Debug.Log("상태전환: Trace -> Attack");
+            CurrentState = EnemyState.Attack;
+        }
     }
 
     private void Return()
