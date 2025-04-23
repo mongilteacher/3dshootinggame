@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 
@@ -34,7 +35,7 @@ public class Enemy : MonoBehaviour
     private float _attackTimer    = 0f;     // ㄴ 체크기
     public int Health             = 100;
     public float DamagedTime      = 0.5f;   // 경직 시간
-    private float _damagedTimer   = 0f;     // ㄴ 체크기
+    public float DeathTime        = 1f;
     
     private void Start()
     {
@@ -72,29 +73,33 @@ public class Enemy : MonoBehaviour
                 Attack();
                 break;
             }
-
-            case EnemyState.Damaged:
-            {
-                Damaged();
-                break;
-            }
-
-            case EnemyState.Die:
-            {
-                Die();
-                break;
-            }
         }
     }
 
     public void TakeDamage(Damage damage)
     {
+        // 사망했거나 공격받고 있는 중이면..
+        if(CurrentState == EnemyState.Damaged || CurrentState == EnemyState.Die)
+        {
+            return;
+        }
+        
         Health -= damage.Value;
+
+        if (Health <= 0)
+        {
+            CurrentState = EnemyState.Die;
+            Debug.Log($"상태전환: {CurrentState} -> Die");
+            CurrentState = EnemyState.Die;
+            StartCoroutine(Die_Coroutine());
+            return;
+        }
+        
         
         Debug.Log($"상태전환: {CurrentState} -> Damaged");
-
-        _damagedTimer = 0f;
+        
         CurrentState = EnemyState.Damaged;
+        StartCoroutine(Damaged_Coroutine());
     }
     
     
@@ -179,21 +184,26 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void Damaged()
+    private IEnumerator Damaged_Coroutine()
     {
         // 행동: 일정 시간동안 멈춰있다가 -> Trace
-        _damagedTimer += Time.deltaTime;
+        /*_damagedTimer += Time.deltaTime;
         if (_damagedTimer >= DamagedTime)
         {
             _damagedTimer = 0f;
             Debug.Log("상태전환: Damaged -> Trace");
             CurrentState = EnemyState.Trace;
-        }
+        }*/
+        
+        // 코루틴 방식으로 변경
+        yield return new WaitForSeconds(DamagedTime);
+        Debug.Log("상태전환: Damaged -> Trace");
+        CurrentState = EnemyState.Trace;
     }
 
-    private void Die()
+    private IEnumerator Die_Coroutine()
     {
-        // 행동 죽는다.
+        yield return new WaitForSeconds(DeathTime);
+        gameObject.SetActive(false);
     }
-    
 }
