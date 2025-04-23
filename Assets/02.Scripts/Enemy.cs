@@ -32,6 +32,9 @@ public class Enemy : MonoBehaviour
     public float MoveSpeed        = 3.3f;   // 이동 속도
     public float AttackCooltime   = 2f;     // 공격 쿨타임
     private float _attackTimer    = 0f;     // ㄴ 체크기
+    public int Health             = 100;
+    public float DamagedTime      = 0.5f;   // 경직 시간
+    private float _damagedTimer   = 0f;     // ㄴ 체크기
     
     private void Start()
     {
@@ -83,6 +86,17 @@ public class Enemy : MonoBehaviour
             }
         }
     }
+
+    public void TakeDamage(Damage damage)
+    {
+        Health -= damage.Value;
+        
+        Debug.Log($"상태전환: {CurrentState} -> Damaged");
+
+        _damagedTimer = 0f;
+        CurrentState = EnemyState.Damaged;
+    }
+    
     
     // 3. 상태 함수들을 구현한다.
     
@@ -167,7 +181,14 @@ public class Enemy : MonoBehaviour
 
     private void Damaged()
     {
-        // 행동: 공격을 당한다.
+        // 행동: 일정 시간동안 멈춰있다가 -> Trace
+        _damagedTimer += Time.deltaTime;
+        if (_damagedTimer >= DamagedTime)
+        {
+            _damagedTimer = 0f;
+            Debug.Log("상태전환: Damaged -> Trace");
+            CurrentState = EnemyState.Trace;
+        }
     }
 
     private void Die()

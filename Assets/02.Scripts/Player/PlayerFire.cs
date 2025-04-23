@@ -57,6 +57,16 @@ public class PlayerFire : MonoBehaviour
                 BulletEffect.Play();
                 
                 // 게임 수학: 선형대수학(스칼라, 벡터, 행렬) 기하학(삼각함수 ..)
+                if (hitInfo.collider.gameObject.CompareTag("Enemy"))
+                {
+                    Enemy enemy = hitInfo.collider.GetComponent<Enemy>();
+                    
+                    Damage damage = new Damage();
+                    damage.Value = 10;
+                    damage.From = this.gameObject;
+                    
+                    enemy.TakeDamage(damage);
+                }
             }
         }
         // Ray: 레이저(시작위치, 방향)
