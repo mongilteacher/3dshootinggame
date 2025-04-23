@@ -91,16 +91,12 @@ public class Enemy : MonoBehaviour
 
     private void Trace()
     {
-        // 행동: 플레이어를 추적한다.
-        Vector3 dir = (_player.transform.position - transform.position).normalized;
-        _characterController.Move(dir * MoveSpeed * Time.deltaTime);
-        
-        
         // 전이: 플레이어와 멀어지면 -> Return
         if(Vector3.Distance(transform.position, _player.transform.position) >= FindDistance)
         {
             Debug.Log("상태전환: Trace -> Return");
             CurrentState = EnemyState.Return;
+            return;
         }
         
         // 전이: 공격 범위 만큼 가까워 지면 -> Attack
@@ -108,7 +104,12 @@ public class Enemy : MonoBehaviour
         {
             Debug.Log("상태전환: Trace -> Attack");
             CurrentState = EnemyState.Attack;
+            return;
         }
+        
+        // 행동: 플레이어를 추적한다.
+        Vector3 dir = (_player.transform.position - transform.position).normalized;
+        _characterController.Move(dir * MoveSpeed * Time.deltaTime);
     }
 
     private void Return()
