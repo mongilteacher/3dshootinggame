@@ -152,6 +152,7 @@ public class Enemy : MonoBehaviour
         {
             Debug.Log("상태전환: Attack -> Trace");
             CurrentState = EnemyState.Trace;
+            _attackTimer = 0f;
             return;
         }
         
