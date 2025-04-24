@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 
 
 // 인공지능: 사랑처럼 똑똑하게 행동하는 알고리즘
@@ -25,6 +26,7 @@ public class Enemy : MonoBehaviour
 
     private GameObject _player;                       // 플레이어
     private CharacterController _characterController; // 캐릭터 컨트롤러
+    private NavMeshAgent _agent;                      // 네비메시 에이전트
     private Vector3 _startPosition;                   // 시작 위치
     
     public float FindDistance     = 5f;     // 플레이어 발견 범위
@@ -39,6 +41,9 @@ public class Enemy : MonoBehaviour
     
     private void Start()
     {
+        _agent = GetComponent<NavMeshAgent>();
+        _agent.speed = MoveSpeed; 
+        
         _startPosition = transform.position;
         _characterController = GetComponent<CharacterController>();
         _player = GameObject.FindGameObjectWithTag("Player");
@@ -136,8 +141,9 @@ public class Enemy : MonoBehaviour
         }
         
         // 행동: 플레이어를 추적한다.
-        Vector3 dir = (_player.transform.position - transform.position).normalized;
-        _characterController.Move(dir * MoveSpeed * Time.deltaTime);
+        // Vector3 dir = (_player.transform.position - transform.position).normalized;
+        // _characterController.Move(dir * MoveSpeed * Time.deltaTime);
+        _agent.SetDestination(_player.transform.position);
     }
 
     private void Return()
@@ -160,8 +166,9 @@ public class Enemy : MonoBehaviour
     
         
         // 행동: 시작 위치로 되돌아간다.
-        Vector3 dir = (_startPosition - transform.position).normalized;
-        _characterController.Move(dir * MoveSpeed * Time.deltaTime);
+        // Vector3 dir = (_startPosition - transform.position).normalized;
+        // _characterController.Move(dir * MoveSpeed * Time.deltaTime);
+        _agent.SetDestination(_startPosition);
     }
 
     private void Attack()
@@ -196,6 +203,8 @@ public class Enemy : MonoBehaviour
         }*/
         
         // 코루틴 방식으로 변경
+        _agent.isStopped = true;
+        _agent.ResetPath();
         yield return new WaitForSeconds(DamagedTime);
         Debug.Log("상태전환: Damaged -> Trace");
         CurrentState = EnemyState.Trace;
