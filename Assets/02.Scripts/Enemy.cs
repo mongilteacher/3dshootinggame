@@ -8,7 +8,7 @@ using UnityEngine.AI;
 // - 반응형/계획형 -> 규칙 기반 인공지능 (전통적인 방식)
 //               ->   ㄴ 제어문(조건문, 반복문)
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IDamageable
 {
     // 1. 상태를 열거형으로 정의한다.
     public enum EnemyState

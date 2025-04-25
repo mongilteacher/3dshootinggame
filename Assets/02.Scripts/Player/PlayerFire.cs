@@ -57,15 +57,14 @@ public class PlayerFire : MonoBehaviour
                 BulletEffect.Play();
                 
                 // 게임 수학: 선형대수학(스칼라, 벡터, 행렬) 기하학(삼각함수 ..)
-                if (hitInfo.collider.gameObject.CompareTag("Enemy"))
+                // 총알을 맞은 친구가 IDamageable 구현체라면...
+                if(hitInfo.collider.TryGetComponent<IDamageable>(out IDamageable damageable))
                 {
-                    Enemy enemy = hitInfo.collider.GetComponent<Enemy>();
-                    
                     Damage damage = new Damage();
                     damage.Value = 10;
                     damage.From = this.gameObject;
                     
-                    enemy.TakeDamage(damage);
+                    damageable.TakeDamage(damage);   
                 }
             }
         }
