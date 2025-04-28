@@ -12,12 +12,16 @@ public class PlayerFire : MonoBehaviour
     // - 던지는 힘
     public float ThrowPower = 15f;
     
+    private Animator _animator;
+
     
     // 목표: 마우스의 왼쪽 버튼을 누르면 카메라가 바라보는 방향으로 총을 발사하고 싶다.
     public ParticleSystem BulletEffect;
     
     private void Start()
     {
+        _animator = GetComponentInChildren<Animator>();
+
         Cursor.lockState = CursorLockMode.Locked; 
     }
     
@@ -41,6 +45,8 @@ public class PlayerFire : MonoBehaviour
         // 1. 왼쪽 버튼 입력 받기
         if (Input.GetMouseButtonDown(0))
         {
+            _animator.SetTrigger("Shot");
+            
             // 2. 레이를 생성하고 발사 위치와 진행 방향을 설정
             Ray ray = new Ray(FirePosition.transform.position, Camera.main.transform.forward);
             
