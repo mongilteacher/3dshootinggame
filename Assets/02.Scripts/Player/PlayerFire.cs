@@ -14,6 +14,12 @@ public class PlayerFire : MonoBehaviour
     
     private Animator _animator;
 
+    public GameObject UI_Crosshair;
+    public GameObject UI_SniperZoom;
+    public float ZoomInSize  = 15f;
+    public float ZoomOutSize = 60f;
+    private bool _zoomMode = false;
+
     
     // 목표: 마우스의 왼쪽 버튼을 누르면 카메라가 바라보는 방향으로 총을 발사하고 싶다.
     public ParticleSystem BulletEffect;
@@ -32,13 +38,27 @@ public class PlayerFire : MonoBehaviour
         if (Input.GetMouseButtonDown(1))
         {
             // 3. 발사 위치에 수류탄 생성하기
-            GameObject bomb = Instantiate(BombPrefab);
-            bomb.transform.position = FirePosition.transform.position;
+            //GameObject bomb = Instantiate(BombPrefab);
+            //bomb.transform.position = FirePosition.transform.position;
             
             // 4. 생성된 수류탄을 카메라 방향으로 물릭적인 힘 가하기
-            Rigidbody bombRigidbody = bomb.GetComponent<Rigidbody>();
-            bombRigidbody.AddForce(Camera.main.transform.forward * ThrowPower, ForceMode.Impulse);
-            bombRigidbody.AddTorque(Vector3.one);
+            //Rigidbody bombRigidbody = bomb.GetComponent<Rigidbody>();
+            //bombRigidbody.AddForce(Camera.main.transform.forward * ThrowPower, ForceMode.Impulse);
+            //bombRigidbody.AddTorque(Vector3.one);
+
+            _zoomMode = !_zoomMode;
+            if (_zoomMode)
+            {
+                UI_Crosshair.SetActive(false);
+                UI_SniperZoom.SetActive(true);
+                Camera.main.fieldOfView = ZoomInSize;
+            }
+            else
+            {
+                UI_Crosshair.SetActive(true);
+                UI_SniperZoom.SetActive(false);
+                Camera.main.fieldOfView = ZoomOutSize;
+            }
         }
         
         // 총알 발사(레이저 방식)
