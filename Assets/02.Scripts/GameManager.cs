@@ -37,22 +37,14 @@ public class GameManager : MonoBehaviour
         _instance = this;
     }
     
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Pause();
-        }
-    }
-
-    private void Pause()
+    public void Pause()
     {
         _gameState = EGameState.Pause;
         Time.timeScale = 0;
 
         Cursor.lockState = CursorLockMode.None;
         
-        PopupManager.Instance.Open(EPopupType.UI_OptionPopup);
+        PopupManager.Instance.Open(EPopupType.UI_OptionPopup, closeCallback: Continue);
     }
 
     public void Continue()

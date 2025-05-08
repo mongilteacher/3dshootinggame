@@ -3,7 +3,7 @@ using UnityEngine;
 public class UI_OptionPopup : UI_Popup
 {
     public void OnClickContinueButton()
-    {       
+    {
         GameManager.Instance.Continue();
 
         gameObject.SetActive(false);
@@ -16,11 +16,11 @@ public class UI_OptionPopup : UI_Popup
 
     public void OnClickQuitButton()
     {
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
-        #else
+#else
         Application.Quit();
-        #endif
+#endif
     }
 
     public void OnClickCreditButton()
