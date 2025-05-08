@@ -1,14 +1,7 @@
 using UnityEngine;
 
-public class UI_OptionPopup : MonoBehaviour
+public class UI_OptionPopup : UI_Popup
 {
-    public UI_CreditPopup CreditPopup;
-    
-    public void Open()
-    {
-        gameObject.SetActive(true);
-    }
-
     public void OnClickContinueButton()
     {       
         GameManager.Instance.Continue();
@@ -32,6 +25,6 @@ public class UI_OptionPopup : MonoBehaviour
 
     public void OnClickCreditButton()
     {
-        CreditPopup.Open();
+        PopupManager.Instance.Open(EPopupType.UI_CreditPopup);
     }
 }

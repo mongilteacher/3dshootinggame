@@ -18,8 +18,6 @@ public class GameManager : MonoBehaviour
 
     private EGameState _gameState = EGameState.Run;
     public EGameState GameState => _gameState;
-
-    public UI_OptionPopup OptionPopup;
     
     
     private void Awake()
@@ -54,7 +52,7 @@ public class GameManager : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.None;
         
-        OptionPopup.Open();
+        PopupManager.Instance.Open(EPopupType.UI_OptionPopup);
     }
 
     public void Continue()
