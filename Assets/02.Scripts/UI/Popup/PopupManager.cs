@@ -49,14 +49,22 @@ public class PopupManager : MonoBehaviour
         {
             if (_openedPopups.Count > 0)
             {
-                Debug.Log("A");
-                _openedPopups[_openedPopups.Count - 1].Close();
-                _openedPopups.RemoveAt(_openedPopups.Count - 1);
+                while (true)
+                {
+                    bool opend = _openedPopups[_openedPopups.Count - 1].isActiveAndEnabled;
+                    _openedPopups[_openedPopups.Count - 1].Close();
+                    _openedPopups.RemoveAt(_openedPopups.Count - 1);
+
+                    // 열려있는 팝업을 닫았거나 || 더이상 닫을 팝업이 없으면 탈출!
+                    if (opend || _openedPopups.Count == 0)
+                    {
+                        break;
+                    }
+                }
+               
             }
             else
             {
-                Debug.Log("B");
-
                 GameManager.Instance.Pause();
             }
         }
