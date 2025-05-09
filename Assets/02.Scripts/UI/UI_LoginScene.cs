@@ -60,19 +60,39 @@ public class UI_LoginScene : MonoBehaviour
         if (string.IsNullOrEmpty(id))
         {
             RegisterInputFields.ResultText.text = "아이디를 입력해주세요.";
+            // (ResultText 흔들어주세요.)
             return;
         }
         
         // 2. 1차 비밀번호 입력을 확인한다.
+        string password = RegisterInputFields.PasswordInputField.text;
+        if (string.IsNullOrEmpty(password))
+        {
+            RegisterInputFields.ResultText.text = "비밀번호를 입력해주세요.";
+            return;
+        }
         
         
         // 3. 2차 비밀번호 입력을 확인하고, 1차 비밀번호 입력과 같은지 확인한다.
-        
+        string password2 = RegisterInputFields.PasswordComfirmInputField.text;
+        if (string.IsNullOrEmpty(password2))
+        {
+            RegisterInputFields.ResultText.text = "비밀번호를 입력해주세요.";
+            return;
+        }
+
+        if (password != password2)
+        {
+            RegisterInputFields.ResultText.text = "비밀번혹가 다릅니다.";
+            return;
+        }
         
         // 4. PlayerPrefs를 이용해서 아이디와 비밀번호를 저장한다.
-        PlayerPrefs.SetString("아이디", "비밀번호");
+        // (비밀번호를 암호화 해서 저장하세요.)
+        PlayerPrefs.SetString(id, password);
         
-        // 5. 로그인 창으로 돌아간다. (이때 아이디는 자동 입력되어 있다.)
+        // 5. 로그인 창으로 돌아간다.
+        // (이때 아이디는 자동 입력되어 있다.)
         OnClickGoToLoginButton();
     }
     
