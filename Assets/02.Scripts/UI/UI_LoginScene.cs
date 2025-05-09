@@ -4,6 +4,7 @@ using System.Text;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [Serializable]
 public class UI_InputFields
@@ -133,7 +134,7 @@ public class UI_LoginScene : MonoBehaviour
         
         // 2. 비밀번호 입력을 확인한다.
         string password = LoginInputFields.PasswordInputField.text;
-        if (string.IsNullOrEmpty(id))
+        if (string.IsNullOrEmpty(password))
         {
             LoginInputFields.ResultText.text = "비밀번호를 입력해주세요.";
             return;
@@ -155,6 +156,7 @@ public class UI_LoginScene : MonoBehaviour
         
         // 4. 맞다면 로그인
         Debug.Log("로그인 성공!");
+        SceneManager.LoadScene(1);
     }
     
     
