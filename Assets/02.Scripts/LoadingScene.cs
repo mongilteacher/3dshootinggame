@@ -38,13 +38,33 @@ public class LoadingScene : MonoBehaviour
             // 비동기로 실행할 코드를
             Debug.Log(ao.progress); // 0~1 
             ProgressSlider.value = ao.progress;
-            ProgressText.text = $"{ao.progress * 100f}%";
             
             // 서버와 통신해서 유저 데이터나 기획 데이터를 받아오면 된다.
-            
+            if (ao.progress <= 0.1)
+            {
+                ProgressText.text = $"({ao.progress * 100}) 작전 코드: 리드 데드 시작 중...";
+            }
+            else if (ao.progress <= 0.3)
+            {
+                ProgressText.text = $"({ao.progress * 100}) 해병, 총기 점검 완료!";
+            }
+            else if (ao.progress <= 0.5)
+            {
+                ProgressText.text = $"({ao.progress * 100}) 임무: 생존자 보호 및 좀비 섬멸";
+            }
+            else if (ao.progress <= 0.7)
+            {
+                ProgressText.text = $"({ao.progress * 100}) 사상자 수집 중... 너무 많다";
+            }
+            else if (ao.progress <= 0.9)
+            {
+                ProgressText.text = $"({ao.progress * 100}) 진입 포인트 확보 완료";
+            }
 
             if (ao.progress >= 0.9f)
-            {
+            {              
+                ProgressText.text = $"({ao.progress * 100}) Go! Go! Go!";
+
                 ao.allowSceneActivation = true;
             }
             
